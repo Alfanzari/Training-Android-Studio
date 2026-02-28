@@ -1,11 +1,18 @@
 package com.syauqialfanzari0008.training1
 
-import android.content.res.Configuration // Tambahkan ini untuk Preview Night Mode
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -13,9 +20,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue // Tambahkan ini agar 'by' tidak merah
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue // Tambahkan ini agar 'by' tidak merah
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.syauqialfanzari0008.training1.ui.theme.Training1Theme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +39,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Training1Theme {
-                // PERUBAHAN 1: Memanggil MainScreen, bukan Scaffold/Greeting lama
                 MainScreen()
             }
         }
@@ -47,27 +61,48 @@ fun MainScreen() {
             )
         }
     ) { innerPadding ->
-        // PERUBAHAN 2: Menghubungkan ke ScreenContent dengan padding yang benar
+        // Mengirimkan modifier padding dari Scaffold ke ScreenContent
         ScreenContent(Modifier.padding(innerPadding))
     }
 }
 
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello Android!",
-        modifier = modifier
-    )
+    // State untuk menyimpan angka counter
+    var count by remember { mutableStateOf(0) }
+
+    // Menggunakan Row agar tampilan horizontal (Hint: Challenge)
+    Row(
+        modifier = modifier.fillMaxSize(),
+        verticalAlignment = Alignment.CenterVertically, // Agar ke tengah secara vertikal
+        horizontalArrangement = Arrangement.Center     // Agar ke tengah secara horizontal
+    ) {
+        // Tombol Kurang (-)
+        Button(onClick = {
+            if (count > 0) count-- // Spesifikasi: Limit angka tidak negatif
+        }) {
+            Text(text = "-")
+        }
+
+        // Tampilan Angka
+        Text(
+            text = " $count ",
+            fontSize = 40.sp, // Ukuran teks diperbesar agar jelas
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+
+        // Tombol Tambah (+)
+        Button(onClick = { count++ }) {
+            Text(text = "+")
+        }
+    }
 }
 
-// PERUBAHAN 3: Update Preview agar menampilkan MainScreen, bukan Greeting
 @Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true) // Tambahan untuk tema gelap
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun MainScreenPreview() {
     Training1Theme {
         MainScreen()
     }
 }
-
-// Catatan: Fungsi Greeting sudah tidak dipakai lagi menurut tutorial, bisa dihapus.
